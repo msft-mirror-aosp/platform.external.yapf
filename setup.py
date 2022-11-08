@@ -17,7 +17,7 @@ import codecs
 import sys
 import unittest
 
-from setuptools import find_packages, setup, Command
+from setuptools import setup, Command
 
 import yapf
 
@@ -49,7 +49,7 @@ with codecs.open('README.rst', 'r', 'utf-8') as fd:
       author='Google Inc.',
       maintainer='Bill Wendling',
       maintainer_email='morbo@google.com',
-      packages=find_packages('.'),
+      packages=['yapf', 'yapf.yapflib', 'yapftests'],
       classifiers=[
           'Development Status :: 4 - Beta',
           'Environment :: Console',
@@ -65,10 +65,7 @@ with codecs.open('README.rst', 'r', 'utf-8') as fd:
           'Topic :: Software Development :: Quality Assurance',
       ],
       entry_points={
-          'console_scripts': [
-              'yapf = yapf:run_main',
-              'yapf-diff = yapf.third_party.yapf_diff.yapf_diff:main',
-          ],
+          'console_scripts': ['yapf = yapf:run_main'],
       },
       cmdclass={
           'test': RunTests,

@@ -38,8 +38,8 @@ class TestsForFacebookStyle(yapf_test_helper.YAPFTest):
         def overly_long_function_name(just_one_arg, **kwargs):
             pass
         """)
-    llines = yapf_test_helper.ParseAndUnwrap(unformatted_code)
-    self.assertCodeEqual(expected_formatted_code, reformatter.Reformat(llines))
+    uwlines = yapf_test_helper.ParseAndUnwrap(unformatted_code)
+    self.assertCodeEqual(expected_formatted_code, reformatter.Reformat(uwlines))
 
   def testDedentClosingBracket(self):
     unformatted_code = textwrap.dedent("""\
@@ -53,9 +53,9 @@ class TestsForFacebookStyle(yapf_test_helper.YAPFTest):
             first_argument_on_the_same_line, second_argument_makes_the_line_too_long
         ):
             pass
-        """)  # noqa
-    llines = yapf_test_helper.ParseAndUnwrap(unformatted_code)
-    self.assertCodeEqual(expected_formatted_code, reformatter.Reformat(llines))
+        """)
+    uwlines = yapf_test_helper.ParseAndUnwrap(unformatted_code)
+    self.assertCodeEqual(expected_formatted_code, reformatter.Reformat(uwlines))
 
   def testBreakAfterOpeningBracketIfContentsTooBig(self):
     unformatted_code = textwrap.dedent("""\
@@ -70,8 +70,8 @@ v, w, x, y, z
         ):
             pass
         """)
-    llines = yapf_test_helper.ParseAndUnwrap(unformatted_code)
-    self.assertCodeEqual(expected_formatted_code, reformatter.Reformat(llines))
+    uwlines = yapf_test_helper.ParseAndUnwrap(unformatted_code)
+    self.assertCodeEqual(expected_formatted_code, reformatter.Reformat(uwlines))
 
   def testDedentClosingBracketWithComments(self):
     unformatted_code = textwrap.dedent("""\
@@ -91,8 +91,8 @@ v, w, x, y, z
         ):
             pass
         """)
-    llines = yapf_test_helper.ParseAndUnwrap(unformatted_code)
-    self.assertCodeEqual(expected_formatted_code, reformatter.Reformat(llines))
+    uwlines = yapf_test_helper.ParseAndUnwrap(unformatted_code)
+    self.assertCodeEqual(expected_formatted_code, reformatter.Reformat(uwlines))
 
   def testDedentImportAsNames(self):
     code = textwrap.dedent("""\
@@ -103,8 +103,8 @@ v, w, x, y, z
             SOME_CONSTANT_NUMBER3,
         )
         """)
-    llines = yapf_test_helper.ParseAndUnwrap(code)
-    self.assertCodeEqual(code, reformatter.Reformat(llines))
+    uwlines = yapf_test_helper.ParseAndUnwrap(code)
+    self.assertCodeEqual(code, reformatter.Reformat(uwlines))
 
   def testDedentTestListGexp(self):
     unformatted_code = textwrap.dedent("""\
@@ -141,8 +141,8 @@ v, w, x, y, z
         ) as exception:
             pass
         """)
-    llines = yapf_test_helper.ParseAndUnwrap(unformatted_code)
-    self.assertCodeEqual(expected_formatted_code, reformatter.Reformat(llines))
+    uwlines = yapf_test_helper.ParseAndUnwrap(unformatted_code)
+    self.assertCodeEqual(expected_formatted_code, reformatter.Reformat(uwlines))
 
   def testBrokenIdempotency(self):
     # TODO(ambv): The following behaviour should be fixed.
@@ -151,7 +151,7 @@ v, w, x, y, z
             pass
         except (IOError, OSError, LookupError, RuntimeError, OverflowError) as exception:
             pass
-        """)  # noqa
+        """)
     pass1_code = textwrap.dedent("""\
         try:
             pass
@@ -160,8 +160,8 @@ v, w, x, y, z
         ) as exception:
             pass
         """)
-    llines = yapf_test_helper.ParseAndUnwrap(pass0_code)
-    self.assertCodeEqual(pass1_code, reformatter.Reformat(llines))
+    uwlines = yapf_test_helper.ParseAndUnwrap(pass0_code)
+    self.assertCodeEqual(pass1_code, reformatter.Reformat(uwlines))
 
     pass2_code = textwrap.dedent("""\
         try:
@@ -171,8 +171,8 @@ v, w, x, y, z
         ) as exception:
             pass
         """)
-    llines = yapf_test_helper.ParseAndUnwrap(pass1_code)
-    self.assertCodeEqual(pass2_code, reformatter.Reformat(llines))
+    uwlines = yapf_test_helper.ParseAndUnwrap(pass1_code)
+    self.assertCodeEqual(pass2_code, reformatter.Reformat(uwlines))
 
   def testIfExprHangingIndent(self):
     unformatted_code = textwrap.dedent("""\
@@ -194,22 +194,22 @@ v, w, x, y, z
                     ):
                         pass
         """)
-    llines = yapf_test_helper.ParseAndUnwrap(unformatted_code)
-    self.assertCodeEqual(expected_formatted_code, reformatter.Reformat(llines))
+    uwlines = yapf_test_helper.ParseAndUnwrap(unformatted_code)
+    self.assertCodeEqual(expected_formatted_code, reformatter.Reformat(uwlines))
 
   def testSimpleDedenting(self):
     unformatted_code = textwrap.dedent("""\
         if True:
             self.assertEqual(result.reason_not_added, "current preflight is still running")
-        """)  # noqa
+        """)
     expected_formatted_code = textwrap.dedent("""\
         if True:
             self.assertEqual(
                 result.reason_not_added, "current preflight is still running"
             )
         """)
-    llines = yapf_test_helper.ParseAndUnwrap(unformatted_code)
-    self.assertCodeEqual(expected_formatted_code, reformatter.Reformat(llines))
+    uwlines = yapf_test_helper.ParseAndUnwrap(unformatted_code)
+    self.assertCodeEqual(expected_formatted_code, reformatter.Reformat(uwlines))
 
   def testDedentingWithSubscripts(self):
     unformatted_code = textwrap.dedent("""\
@@ -220,7 +220,7 @@ v, w, x, y, z
                     if clues_lists:
                        return cls.single_constraint_not(clues_lists, effect, constraints[0], constraint_manager)
 
-        """)  # noqa
+        """)
     expected_formatted_code = textwrap.dedent("""\
         class Foo:
             class Bar:
@@ -230,9 +230,9 @@ v, w, x, y, z
                         return cls.single_constraint_not(
                             clues_lists, effect, constraints[0], constraint_manager
                         )
-        """)  # noqa
-    llines = yapf_test_helper.ParseAndUnwrap(unformatted_code)
-    self.assertCodeEqual(expected_formatted_code, reformatter.Reformat(llines))
+        """)
+    uwlines = yapf_test_helper.ParseAndUnwrap(unformatted_code)
+    self.assertCodeEqual(expected_formatted_code, reformatter.Reformat(uwlines))
 
   def testDedentingCallsWithInnerLists(self):
     code = textwrap.dedent("""\
@@ -241,9 +241,9 @@ v, w, x, y, z
                 cls.effect_clues = {
                     'effect': Clue((cls.effect_time, 'apache_host'), effect_line, 40)
                 }
-        """)  # noqa
-    llines = yapf_test_helper.ParseAndUnwrap(code)
-    self.assertCodeEqual(code, reformatter.Reformat(llines))
+        """)
+    uwlines = yapf_test_helper.ParseAndUnwrap(code)
+    self.assertCodeEqual(code, reformatter.Reformat(uwlines))
 
   def testDedentingListComprehension(self):
     unformatted_code = textwrap.dedent("""\
@@ -283,7 +283,7 @@ v, w, x, y, z
                     ('localhost', os.path.join(path, 'node_1.log'), super_parser),
                     ('localhost', os.path.join(path, 'node_2.log'), super_parser)
                 ]
-        """)  # noqa
+        """)
     expected_formatted_code = textwrap.dedent("""\
         class Foo():
             def _pack_results_for_constraint_or():
@@ -319,9 +319,9 @@ v, w, x, y, z
                     ('localhost', os.path.join(path, 'node_1.log'), super_parser),
                     ('localhost', os.path.join(path, 'node_2.log'), super_parser)
                 ]
-        """)  # noqa
-    llines = yapf_test_helper.ParseAndUnwrap(unformatted_code)
-    self.assertCodeEqual(expected_formatted_code, reformatter.Reformat(llines))
+        """)
+    uwlines = yapf_test_helper.ParseAndUnwrap(unformatted_code)
+    self.assertCodeEqual(expected_formatted_code, reformatter.Reformat(uwlines))
 
   def testMustSplitDedenting(self):
     code = textwrap.dedent("""\
@@ -331,9 +331,9 @@ v, w, x, y, z
                     effect_line_offset, line_content,
                     LineSource('localhost', xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx)
                 )
-        """)  # noqa
-    llines = yapf_test_helper.ParseAndUnwrap(code)
-    self.assertCodeEqual(code, reformatter.Reformat(llines))
+        """)
+    uwlines = yapf_test_helper.ParseAndUnwrap(code)
+    self.assertCodeEqual(code, reformatter.Reformat(uwlines))
 
   def testDedentIfConditional(self):
     code = textwrap.dedent("""\
@@ -346,8 +346,8 @@ v, w, x, y, z
                     ):
                         pass
         """)
-    llines = yapf_test_helper.ParseAndUnwrap(code)
-    self.assertCodeEqual(code, reformatter.Reformat(llines))
+    uwlines = yapf_test_helper.ParseAndUnwrap(code)
+    self.assertCodeEqual(code, reformatter.Reformat(uwlines))
 
   def testDedentSet(self):
     code = textwrap.dedent("""\
@@ -362,8 +362,8 @@ v, w, x, y, z
                     ]
                 )
         """)
-    llines = yapf_test_helper.ParseAndUnwrap(code)
-    self.assertCodeEqual(code, reformatter.Reformat(llines))
+    uwlines = yapf_test_helper.ParseAndUnwrap(code)
+    self.assertCodeEqual(code, reformatter.Reformat(uwlines))
 
   def testDedentingInnerScope(self):
     code = textwrap.dedent("""\
@@ -374,13 +374,13 @@ v, w, x, y, z
                     (clue for clue in combination if not clue == Verifier.UNMATCHED),
                     constraints, InvestigationResult.OR
                 )
-        """)  # noqa
-    llines = yapf_test_helper.ParseAndUnwrap(code)
-    reformatted_code = reformatter.Reformat(llines)
+        """)
+    uwlines = yapf_test_helper.ParseAndUnwrap(code)
+    reformatted_code = reformatter.Reformat(uwlines)
     self.assertCodeEqual(code, reformatted_code)
 
-    llines = yapf_test_helper.ParseAndUnwrap(reformatted_code)
-    reformatted_code = reformatter.Reformat(llines)
+    uwlines = yapf_test_helper.ParseAndUnwrap(reformatted_code)
+    reformatted_code = reformatter.Reformat(uwlines)
     self.assertCodeEqual(code, reformatted_code)
 
   def testCommentWithNewlinesInPrefix(self):
@@ -388,8 +388,8 @@ v, w, x, y, z
         def foo():
             if 0:
                 return False
-
-
+                
+                
             #a deadly comment
             elif 1:
                 return True
@@ -401,7 +401,7 @@ v, w, x, y, z
         def foo():
             if 0:
                 return False
-
+                
             #a deadly comment
             elif 1:
                 return True
@@ -409,14 +409,14 @@ v, w, x, y, z
 
         print(foo())
         """)
-    llines = yapf_test_helper.ParseAndUnwrap(unformatted_code)
-    self.assertCodeEqual(expected_formatted_code, reformatter.Reformat(llines))
+    uwlines = yapf_test_helper.ParseAndUnwrap(unformatted_code)
+    self.assertCodeEqual(expected_formatted_code, reformatter.Reformat(uwlines))
 
   def testIfStmtClosingBracket(self):
     unformatted_code = """\
 if (isinstance(value  , (StopIteration  , StopAsyncIteration  )) and exc.__cause__ is value_asdfasdfasdfasdfsafsafsafdasfasdfs):
     return False
-"""  # noqa
+"""
     expected_formatted_code = """\
 if (
     isinstance(value, (StopIteration, StopAsyncIteration)) and
@@ -424,8 +424,8 @@ if (
 ):
     return False
 """
-    llines = yapf_test_helper.ParseAndUnwrap(unformatted_code)
-    self.assertCodeEqual(expected_formatted_code, reformatter.Reformat(llines))
+    uwlines = yapf_test_helper.ParseAndUnwrap(unformatted_code)
+    self.assertCodeEqual(expected_formatted_code, reformatter.Reformat(uwlines))
 
 
 if __name__ == '__main__':

@@ -29,14 +29,14 @@ class TestsForPython3Code(yapf_test_helper.YAPFTest):
   """Test a few constructs that are new Python 3 syntax."""
 
   @classmethod
-  def setUpClass(cls):  # pylint: disable=g-missing-super-call
+  def setUpClass(cls):
     style.SetGlobalStyle(style.CreatePEP8Style())
 
   def testTypedNames(self):
     unformatted_code = textwrap.dedent("""\
         def x(aaaaaaaaaaaaaaa:int,bbbbbbbbbbbbbbbb:str,ccccccccccccccc:dict,eeeeeeeeeeeeee:set={1, 2, 3})->bool:
           pass
-        """)  # noqa
+        """)
     expected_formatted_code = textwrap.dedent("""\
         def x(aaaaaaaaaaaaaaa: int,
               bbbbbbbbbbbbbbbb: str,
@@ -44,21 +44,8 @@ class TestsForPython3Code(yapf_test_helper.YAPFTest):
               eeeeeeeeeeeeee: set = {1, 2, 3}) -> bool:
             pass
         """)
-    llines = yapf_test_helper.ParseAndUnwrap(unformatted_code)
-    self.assertCodeEqual(expected_formatted_code, reformatter.Reformat(llines))
-
-  def testTypedNameWithLongNamedArg(self):
-    unformatted_code = textwrap.dedent("""\
-        def func(arg=long_function_call_that_pushes_the_line_over_eighty_characters()) -> ReturnType:
-          pass
-        """)  # noqa
-    expected_formatted_code = textwrap.dedent("""\
-        def func(arg=long_function_call_that_pushes_the_line_over_eighty_characters()
-                 ) -> ReturnType:
-            pass
-        """)  # noqa
-    llines = yapf_test_helper.ParseAndUnwrap(unformatted_code)
-    self.assertCodeEqual(expected_formatted_code, reformatter.Reformat(llines))
+    uwlines = yapf_test_helper.ParseAndUnwrap(unformatted_code)
+    self.assertCodeEqual(expected_formatted_code, reformatter.Reformat(uwlines))
 
   def testKeywordOnlyArgSpecifier(self):
     unformatted_code = textwrap.dedent("""\
@@ -69,8 +56,8 @@ class TestsForPython3Code(yapf_test_helper.YAPFTest):
         def foo(a, *, kw):
             return a + kw
         """)
-    llines = yapf_test_helper.ParseAndUnwrap(unformatted_code)
-    self.assertCodeEqual(expected_formatted_code, reformatter.Reformat(llines))
+    uwlines = yapf_test_helper.ParseAndUnwrap(unformatted_code)
+    self.assertCodeEqual(expected_formatted_code, reformatter.Reformat(uwlines))
 
   @unittest.skipUnless(py3compat.PY36, 'Requires Python 3.6')
   def testPEP448ParameterExpansion(self):
@@ -86,8 +73,8 @@ class TestsForPython3Code(yapf_test_helper.YAPFTest):
     {**{**x}, **x}
     {'a': 1, **kw, 'b': 3, **kw2}
     """)
-    llines = yapf_test_helper.ParseAndUnwrap(unformatted_code)
-    self.assertCodeEqual(expected_formatted_code, reformatter.Reformat(llines))
+    uwlines = yapf_test_helper.ParseAndUnwrap(unformatted_code)
+    self.assertCodeEqual(expected_formatted_code, reformatter.Reformat(uwlines))
 
   def testAnnotations(self):
     unformatted_code = textwrap.dedent("""\
@@ -98,14 +85,14 @@ class TestsForPython3Code(yapf_test_helper.YAPFTest):
         def foo(a: list, b: "bar") -> dict:
             return a + b
         """)
-    llines = yapf_test_helper.ParseAndUnwrap(unformatted_code)
-    self.assertCodeEqual(expected_formatted_code, reformatter.Reformat(llines))
+    uwlines = yapf_test_helper.ParseAndUnwrap(unformatted_code)
+    self.assertCodeEqual(expected_formatted_code, reformatter.Reformat(uwlines))
 
   def testExecAsNonKeyword(self):
     unformatted_code = 'methods.exec( sys.modules[name])\n'
     expected_formatted_code = 'methods.exec(sys.modules[name])\n'
-    llines = yapf_test_helper.ParseAndUnwrap(unformatted_code)
-    self.assertCodeEqual(expected_formatted_code, reformatter.Reformat(llines))
+    uwlines = yapf_test_helper.ParseAndUnwrap(unformatted_code)
+    self.assertCodeEqual(expected_formatted_code, reformatter.Reformat(uwlines))
 
   def testAsyncFunctions(self):
     if sys.version_info[1] < 5:
@@ -126,45 +113,41 @@ class TestsForPython3Code(yapf_test_helper.YAPFTest):
             if (await get_html()):
                 pass
         """)
-    llines = yapf_test_helper.ParseAndUnwrap(code)
-    self.assertCodeEqual(code, reformatter.Reformat(llines, verify=False))
+    uwlines = yapf_test_helper.ParseAndUnwrap(code)
+    self.assertCodeEqual(code, reformatter.Reformat(uwlines, verify=False))
 
   def testNoSpacesAroundPowerOperator(self):
-    unformatted_code = textwrap.dedent("""\
-        a**b
-        """)
-    expected_formatted_code = textwrap.dedent("""\
-        a ** b
-        """)
-
     try:
       style.SetGlobalStyle(
           style.CreateStyleFromConfig(
               '{based_on_style: pep8, SPACES_AROUND_POWER_OPERATOR: True}'))
-
-      llines = yapf_test_helper.ParseAndUnwrap(unformatted_code)
+      unformatted_code = textwrap.dedent("""\
+          a**b
+          """)
+      expected_formatted_code = textwrap.dedent("""\
+          a ** b
+          """)
+      uwlines = yapf_test_helper.ParseAndUnwrap(unformatted_code)
       self.assertCodeEqual(expected_formatted_code,
-                           reformatter.Reformat(llines))
+                           reformatter.Reformat(uwlines))
     finally:
       style.SetGlobalStyle(style.CreatePEP8Style())
 
   def testSpacesAroundDefaultOrNamedAssign(self):
-    unformatted_code = textwrap.dedent("""\
-        f(a=5)
-        """)
-    expected_formatted_code = textwrap.dedent("""\
-        f(a = 5)
-        """)
-
     try:
       style.SetGlobalStyle(
           style.CreateStyleFromConfig(
               '{based_on_style: pep8, '
               'SPACES_AROUND_DEFAULT_OR_NAMED_ASSIGN: True}'))
-
-      llines = yapf_test_helper.ParseAndUnwrap(unformatted_code)
+      unformatted_code = textwrap.dedent("""\
+          f(a=5)
+          """)
+      expected_formatted_code = textwrap.dedent("""\
+          f(a = 5)
+          """)
+      uwlines = yapf_test_helper.ParseAndUnwrap(unformatted_code)
       self.assertCodeEqual(expected_formatted_code,
-                           reformatter.Reformat(llines))
+                           reformatter.Reformat(uwlines))
     finally:
       style.SetGlobalStyle(style.CreatePEP8Style())
 
@@ -185,8 +168,8 @@ class TestsForPython3Code(yapf_test_helper.YAPFTest):
         def foo2(x: 'int' = 42):
             pass
         """)
-    llines = yapf_test_helper.ParseAndUnwrap(unformatted_code)
-    self.assertCodeEqual(expected_formatted_code, reformatter.Reformat(llines))
+    uwlines = yapf_test_helper.ParseAndUnwrap(unformatted_code)
+    self.assertCodeEqual(expected_formatted_code, reformatter.Reformat(uwlines))
 
   def testMatrixMultiplication(self):
     unformatted_code = textwrap.dedent("""\
@@ -195,15 +178,15 @@ class TestsForPython3Code(yapf_test_helper.YAPFTest):
     expected_formatted_code = textwrap.dedent("""\
         a = b @ c
         """)
-    llines = yapf_test_helper.ParseAndUnwrap(unformatted_code)
-    self.assertCodeEqual(expected_formatted_code, reformatter.Reformat(llines))
+    uwlines = yapf_test_helper.ParseAndUnwrap(unformatted_code)
+    self.assertCodeEqual(expected_formatted_code, reformatter.Reformat(uwlines))
 
   def testNoneKeyword(self):
     code = """\
 None.__ne__()
 """
-    llines = yapf_test_helper.ParseAndUnwrap(code)
-    self.assertCodeEqual(code, reformatter.Reformat(llines))
+    uwlines = yapf_test_helper.ParseAndUnwrap(code)
+    self.assertCodeEqual(code, reformatter.Reformat(uwlines))
 
   def testAsyncWithPrecedingComment(self):
     if sys.version_info[1] < 5:
@@ -230,20 +213,19 @@ None.__ne__()
         async def foo():
             pass
         """)
-    llines = yapf_test_helper.ParseAndUnwrap(unformatted_code)
-    self.assertCodeEqual(expected_formatted_code, reformatter.Reformat(llines))
+    uwlines = yapf_test_helper.ParseAndUnwrap(unformatted_code)
+    self.assertCodeEqual(expected_formatted_code, reformatter.Reformat(uwlines))
 
   def testAsyncFunctionsNested(self):
     if sys.version_info[1] < 5:
       return
     code = textwrap.dedent("""\
         async def outer():
-
             async def inner():
                 pass
         """)
-    llines = yapf_test_helper.ParseAndUnwrap(code)
-    self.assertCodeEqual(code, reformatter.Reformat(llines))
+    uwlines = yapf_test_helper.ParseAndUnwrap(code)
+    self.assertCodeEqual(code, reformatter.Reformat(uwlines))
 
   def testKeepTypesIntact(self):
     if sys.version_info[1] < 5:
@@ -253,15 +235,15 @@ None.__ne__()
             self, *args: Optional[automation_converter.PyiCollectionAbc]) -> List[
                 automation_converter.PyiCollectionAbc]:
             pass
-        """)  # noqa
+        """)
     expected_formatted_code = textwrap.dedent("""\
         def _ReduceAbstractContainers(
-            self, *args: Optional[automation_converter.PyiCollectionAbc]
+                self, *args: Optional[automation_converter.PyiCollectionAbc]
         ) -> List[automation_converter.PyiCollectionAbc]:
             pass
         """)
-    llines = yapf_test_helper.ParseAndUnwrap(unformatted_code)
-    self.assertCodeEqual(expected_formatted_code, reformatter.Reformat(llines))
+    uwlines = yapf_test_helper.ParseAndUnwrap(unformatted_code)
+    self.assertCodeEqual(expected_formatted_code, reformatter.Reformat(uwlines))
 
   def testContinuationIndentWithAsync(self):
     if sys.version_info[1] < 5:
@@ -278,14 +260,22 @@ None.__ne__()
                     r"ws://a_really_long_long_long_long_long_long_url") as ws:
                 pass
         """)
-    llines = yapf_test_helper.ParseAndUnwrap(unformatted_code)
-    self.assertCodeEqual(expected_formatted_code, reformatter.Reformat(llines))
+    uwlines = yapf_test_helper.ParseAndUnwrap(unformatted_code)
+    self.assertCodeEqual(expected_formatted_code, reformatter.Reformat(uwlines))
 
   def testSplittingArguments(self):
     if sys.version_info[1] < 5:
       return
-
-    unformatted_code = """\
+    try:
+      style.SetGlobalStyle(
+          style.CreateStyleFromConfig(
+              '{based_on_style: pep8, '
+              'dedent_closing_brackets: true, '
+              'coalesce_brackets: false, '
+              'space_between_ending_comma_and_closing_bracket: false, '
+              'split_arguments_when_comma_terminated: true, '
+              'split_before_first_argument: true}'))
+      unformatted_code = """\
 async def open_file(file, mode='r', buffering=-1, encoding=None, errors=None, newline=None, closefd=True, opener=None):
     pass
 
@@ -297,36 +287,36 @@ def open_file(file, mode='r', buffering=-1, encoding=None, errors=None, newline=
 
 def run_sync_in_worker_thread(sync_fn, *args, cancellable=False, limiter=None):
     pass
-"""  # noqa
-    expected_formatted_code = """\
+"""
+      expected_formatted_code = """\
 async def open_file(
-    file,
-    mode='r',
-    buffering=-1,
-    encoding=None,
-    errors=None,
-    newline=None,
-    closefd=True,
-    opener=None
+        file,
+        mode='r',
+        buffering=-1,
+        encoding=None,
+        errors=None,
+        newline=None,
+        closefd=True,
+        opener=None
 ):
     pass
 
 
 async def run_sync_in_worker_thread(
-    sync_fn, *args, cancellable=False, limiter=None
+        sync_fn, *args, cancellable=False, limiter=None
 ):
     pass
 
 
 def open_file(
-    file,
-    mode='r',
-    buffering=-1,
-    encoding=None,
-    errors=None,
-    newline=None,
-    closefd=True,
-    opener=None
+        file,
+        mode='r',
+        buffering=-1,
+        encoding=None,
+        errors=None,
+        newline=None,
+        closefd=True,
+        opener=None
 ):
     pass
 
@@ -334,20 +324,9 @@ def open_file(
 def run_sync_in_worker_thread(sync_fn, *args, cancellable=False, limiter=None):
     pass
 """
-
-    try:
-      style.SetGlobalStyle(
-          style.CreateStyleFromConfig(
-              '{based_on_style: pep8, '
-              'dedent_closing_brackets: true, '
-              'coalesce_brackets: false, '
-              'space_between_ending_comma_and_closing_bracket: false, '
-              'split_arguments_when_comma_terminated: true, '
-              'split_before_first_argument: true}'))
-
-      llines = yapf_test_helper.ParseAndUnwrap(unformatted_code)
+      uwlines = yapf_test_helper.ParseAndUnwrap(unformatted_code)
       self.assertCodeEqual(expected_formatted_code,
-                           reformatter.Reformat(llines))
+                           reformatter.Reformat(uwlines))
     finally:
       style.SetGlobalStyle(style.CreatePEP8Style())
 
@@ -366,15 +345,14 @@ class Foo:
 """
     expected_formatted_code = """\
 class Foo:
-
     def foo(self):
         foofoofoofoofoofoofoofoo('foofoofoofoofoo', {
             'foo': 'foo',
             **foofoofoo
         })
 """
-    llines = yapf_test_helper.ParseAndUnwrap(unformatted_code)
-    self.assertCodeEqual(expected_formatted_code, reformatter.Reformat(llines))
+    uwlines = yapf_test_helper.ParseAndUnwrap(unformatted_code)
+    self.assertCodeEqual(expected_formatted_code, reformatter.Reformat(uwlines))
 
   def testMultilineFormatString(self):
     if sys.version_info[1] < 6:
@@ -386,8 +364,8 @@ class Foo:
 # yapf: enable
 """
     # https://github.com/google/yapf/issues/513
-    llines = yapf_test_helper.ParseAndUnwrap(code)
-    self.assertCodeEqual(code, reformatter.Reformat(llines))
+    uwlines = yapf_test_helper.ParseAndUnwrap(code)
+    self.assertCodeEqual(code, reformatter.Reformat(uwlines))
 
   def testEllipses(self):
     if sys.version_info[1] < 6:
@@ -397,76 +375,8 @@ def dirichlet(x12345678901234567890123456789012345678901234567890=...) -> None:
     return
 """
     # https://github.com/google/yapf/issues/533
-    llines = yapf_test_helper.ParseAndUnwrap(code)
-    self.assertCodeEqual(code, reformatter.Reformat(llines))
-
-  def testFunctionTypedReturnNextLine(self):
-    code = """\
-def _GenerateStatsEntries(
-    process_id: Text,
-    timestamp: Optional[ffffffff.FFFFFFFFFFF] = None
-) -> Sequence[ssssssssssss.SSSSSSSSSSSSSSS]:
-    pass
-"""
-    llines = yapf_test_helper.ParseAndUnwrap(code)
-    self.assertCodeEqual(code, reformatter.Reformat(llines))
-
-  def testFunctionTypedReturnSameLine(self):
-    code = """\
-def rrrrrrrrrrrrrrrrrrrrrr(
-        ccccccccccccccccccccccc: Tuple[Text, Text]) -> List[Tuple[Text, Text]]:
-    pass
-"""
-    llines = yapf_test_helper.ParseAndUnwrap(code)
-    self.assertCodeEqual(code, reformatter.Reformat(llines))
-
-  def testAsyncForElseNotIndentedInsideBody(self):
-    if sys.version_info[1] < 5:
-      return
-    code = textwrap.dedent("""\
-    async def fn():
-        async for message in websocket:
-            for i in range(10):
-                pass
-            else:
-                pass
-        else:
-            pass
-    """)
-    llines = yapf_test_helper.ParseAndUnwrap(code)
-    self.assertCodeEqual(code, reformatter.Reformat(llines))
-
-  def testForElseInAsyncNotMixedWithAsyncFor(self):
-    if sys.version_info[1] < 5:
-      return
-    code = textwrap.dedent("""\
-    async def fn():
-        for i in range(10):
-            pass
-        else:
-            pass
-    """)
-    llines = yapf_test_helper.ParseAndUnwrap(code)
-    self.assertCodeEqual(code, reformatter.Reformat(llines))
-
-  def testParameterListIndentationConflicts(self):
-    unformatted_code = textwrap.dedent("""\
-        def raw_message(  # pylint: disable=too-many-arguments
-                    self, text, user_id=1000, chat_type='private', forward_date=None, forward_from=None):
-                pass
-        """)  # noqa
-    expected_formatted_code = textwrap.dedent("""\
-        def raw_message(  # pylint: disable=too-many-arguments
-                self,
-                text,
-                user_id=1000,
-                chat_type='private',
-                forward_date=None,
-                forward_from=None):
-            pass
-        """)
-    llines = yapf_test_helper.ParseAndUnwrap(unformatted_code)
-    self.assertCodeEqual(expected_formatted_code, reformatter.Reformat(llines))
+    uwlines = yapf_test_helper.ParseAndUnwrap(code)
+    self.assertCodeEqual(code, reformatter.Reformat(uwlines))
 
 
 if __name__ == '__main__':

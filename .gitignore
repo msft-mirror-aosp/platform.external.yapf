@@ -32,6 +32,3 @@
 /dist
 /.tox
 /yapf.egg-info
-
-/.idea
-
