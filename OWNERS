@@ -1,3 +1,4 @@
 yim@google.com
 yuexima@google.com
 # Will perform annual update
+include platform/system/core:/janitors/OWNERS #{LAST_RESORT_SUGGESTION}
